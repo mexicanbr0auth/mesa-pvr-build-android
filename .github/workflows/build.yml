@@ -56,6 +56,7 @@ jobs:
             --cross-file android-aarch64.txt \
             -Dplatforms=android \
             -Dplatform-sdk-version=33 \
+            -Dandroid-stub=true \
             -Dgallium-drivers=zink \
             -Dvulkan-drivers=imagination \
             -Dgles1=disabled \
@@ -65,19 +66,19 @@ jobs:
             -Degl=enabled \
             -Dcpp_std=c++17 \
             -Dbuildtype=release \
-            -Dgallium-vdpau=disabled \
-            -Dgallium-va=disabled \
-            -Dgallium-xa=disabled \
+            -Dvdpau=disabled \
+            -Dva=disabled \
+            -Dxa=disabled \
             -Dgallium-nine=false \
             -Dllvm=disabled \
             -Dshared-llvm=false \
             -Dclc=disabled \
-            -Dclover=disabled \
             -Dvalgrind=disabled \
             -Dlibunwind=disabled \
             -Dlmsensors=disabled \
             -Dglvnd=false \
-            -Dglx=disabled
+            -Dglx=disabled \
+            -Dosmesa=false
 
       - name: Compile
         run: |
