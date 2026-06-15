@@ -65,10 +65,7 @@ jobs:
             -Dgbm=disabled \
             -Degl=enabled \
             -Dcpp_std=c++17 \
-            -Dbuildtype=release \
-            -Dllvm=disabled \
-            -Dclc=disabled \
-            -Dglvnd=false
+            -Dbuildtype=release
 
       - name: Compile
         run: |
