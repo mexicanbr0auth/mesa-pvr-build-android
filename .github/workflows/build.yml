@@ -56,7 +56,7 @@ jobs:
             --cross-file android-aarch64.txt \
             -Dplatforms=android \
             -Dplatform-sdk-version=33 \
-            -Dgallium-drivers=pvr,zink \
+            -Dgallium-drivers=zink \
             -Dvulkan-drivers=imagination \
             -Dgles1=disabled \
             -Dgles2=enabled \
