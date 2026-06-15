@@ -54,14 +54,14 @@ jobs:
         run: |
           cd mesa-src
           ls -F
-          # Try to find option names
-          grep -i "option" meson_options.txt meson.options 2>/dev/null | grep -iE "clc|llvm" || true
+          # Read options file
+          cat meson.options || true
           meson setup build-android \
             --cross-file android-aarch64.txt \
             -Dplatforms=android \
             -Dplatform-sdk-version=33 \
             -Dandroid-stub=true \
-            -Dgallium-drivers=zink \
+            -Dgallium-drivers= \
             -Dvulkan-drivers=imagination \
             -Dgles1=disabled \
             -Dgles2=enabled \
@@ -70,8 +70,7 @@ jobs:
             -Degl=enabled \
             -Dcpp_std=c++17 \
             -Dbuildtype=release \
-            -Dllvm=disabled \
-            -Dglvnd=disabled
+            -Dllvm=disabled
 
       - name: Compile
         run: |
