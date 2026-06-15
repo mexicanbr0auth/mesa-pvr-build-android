@@ -66,19 +66,9 @@ jobs:
             -Degl=enabled \
             -Dcpp_std=c++17 \
             -Dbuildtype=release \
-            -Dvdpau=disabled \
-            -Dva=disabled \
-            -Dxa=disabled \
-            -Dgallium-nine=false \
             -Dllvm=disabled \
-            -Dshared-llvm=false \
             -Dclc=disabled \
-            -Dvalgrind=disabled \
-            -Dlibunwind=disabled \
-            -Dlmsensors=disabled \
-            -Dglvnd=false \
-            -Dglx=disabled \
-            -Dosmesa=false
+            -Dglvnd=false
 
       - name: Compile
         run: |
