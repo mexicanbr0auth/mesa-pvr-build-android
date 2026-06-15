@@ -64,7 +64,20 @@ jobs:
             -Dgbm=disabled \
             -Degl=enabled \
             -Dcpp_std=c++17 \
-            -Dbuildtype=release
+            -Dbuildtype=release \
+            -Dgallium-vdpau=disabled \
+            -Dgallium-va=disabled \
+            -Dgallium-xa=disabled \
+            -Dgallium-nine=false \
+            -Dllvm=disabled \
+            -Dshared-llvm=false \
+            -Dclc=disabled \
+            -Dclover=disabled \
+            -Dvalgrind=disabled \
+            -Dlibunwind=disabled \
+            -Dlmsensors=disabled \
+            -Dglvnd=false \
+            -Dglx=disabled
 
       - name: Compile
         run: |
