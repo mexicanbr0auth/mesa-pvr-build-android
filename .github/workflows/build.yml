@@ -52,8 +52,8 @@ jobs:
       - name: Configure Build
         run: |
           cd mesa-src
-          # List options to debug
-          meson introspect --projectinfo . || true
+          # Read options to debug
+          cat meson_options.txt || true
           meson setup build-android \
             --cross-file android-aarch64.txt \
             -Dplatforms=android \
@@ -68,9 +68,8 @@ jobs:
             -Degl=enabled \
             -Dcpp_std=c++17 \
             -Dbuildtype=release \
-            -Dllvm=disabled \
-            -Dlmsensors=disabled \
-            -Dglvnd=false
+            -Dllvm=enabled \
+            -Dshared-llvm=true
 
       - name: Compile
         run: |
