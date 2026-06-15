@@ -19,7 +19,7 @@ jobs:
             libx11-dev libxext-dev libxdamage-dev \
             libxshmfence-dev libxxf86vm-dev libwayland-dev \
             wayland-protocols libdrm-dev libxrandr-dev \
-            libclc-dev libglvnd-dev
+            libclc-18-dev libglvnd-dev
           pip3 install meson mako
 
       - name: Setup Android NDK
