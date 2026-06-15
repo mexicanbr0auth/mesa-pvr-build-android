@@ -18,7 +18,8 @@ jobs:
             flex bison gettext pkg-config \
             libx11-dev libxext-dev libxdamage-dev \
             libxshmfence-dev libxxf86vm-dev libwayland-dev \
-            wayland-protocols libdrm-dev libxrandr-dev
+            wayland-protocols libdrm-dev libxrandr-dev \
+            libclc-dev libglvnd-dev
           pip3 install meson mako
 
       - name: Setup Android NDK
@@ -52,8 +53,9 @@ jobs:
       - name: Configure Build
         run: |
           cd mesa-src
-          # Read options to debug
-          cat meson_options.txt || true
+          ls -F
+          # Try to find option names
+          grep -i "option" meson_options.txt meson.options 2>/dev/null | grep -iE "clc|llvm" || true
           meson setup build-android \
             --cross-file android-aarch64.txt \
             -Dplatforms=android \
@@ -68,8 +70,8 @@ jobs:
             -Degl=enabled \
             -Dcpp_std=c++17 \
             -Dbuildtype=release \
-            -Dllvm=enabled \
-            -Dshared-llvm=true
+            -Dllvm=disabled \
+            -Dglvnd=disabled
 
       - name: Compile
         run: |
