@@ -1,0 +1,80 @@
+name: Build Mesa PVR for Android
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            git python3-pip ninja-build build-essential \
+            flex bison gettext pkg-config \
+            libx11-dev libxext-dev libxdamage-dev \
+            libxshmfence-dev libxxf86vm-dev libwayland-dev \
+            wayland-protocols libdrm-dev libxrandr-dev
+          pip3 install meson mako
+
+      - name: Setup Android NDK
+        run: |
+          cd /opt
+          sudo wget https://dl.google.com/android/repository/android-ndk-r25c-linux.zip
+          sudo unzip -q android-ndk-r25c-linux.zip
+          echo "NDK_PATH=/opt/android-ndk-r25c" >> $GITHUB_ENV
+
+      - name: Clone Mesa
+        run: |
+          git clone --depth 1 -b android-pvr-support https://github.com/BayLibre/mesa.git mesa-src
+
+      - name: Create Cross File
+        run: |
+          cat <<EOF > mesa-src/android-aarch64.txt
+          [binaries]
+          c = '${{ env.NDK_PATH }}/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android33-clang'
+          cpp = '${{ env.NDK_PATH }}/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android33-clang++'
+          ar = '${{ env.NDK_PATH }}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-ar'
+          strip = '${{ env.NDK_PATH }}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip'
+          pkgconfig = 'pkg-config'
+
+          [host_machine]
+          system = 'android'
+          cpu_family = 'aarch64'
+          cpu = 'armv8-a'
+          endian = 'little'
+          EOF
+
+      - name: Configure Build
+        run: |
+          cd mesa-src
+          meson setup build-android \
+            --cross-file android-aarch64.txt \
+            -Dplatforms=android \
+            -Dplatform-sdk-version=33 \
+            -Dgallium-drivers=pvr,zink \
+            -Dvulkan-drivers=imagination \
+            -Dgles1=disabled \
+            -Dgles2=enabled \
+            -Dopengl=true \
+            -Dgbm=disabled \
+            -Degl=enabled \
+            -Dcpp_std=c++17 \
+            -Dbuildtype=release
+
+      - name: Compile
+        run: |
+          cd mesa-src
+          ninja -C build-android
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: mesa-pvr-drivers
+          path: |
+            mesa-src/build-android/src/imagination/vulkan/libvulkan_powervr.so
+            mesa-src/build-android/src/gallium/drivers/zink/libmesa_gallium.so
